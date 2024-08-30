@@ -1,0 +1,143 @@
+/* General styles */
+body {
+    background-color: antiquewhite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    margin: 0; /* Remove default margin */
+    font-family: Arial, sans-serif; /* Set a default font */
+}
+
+/* Header styles */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white; /* Ensure the header has a background */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Add a subtle shadow */
+    z-index: 99;
+}
+
+/* Logo styles */
+.logo {
+    width: 50px; /* Set a fixed size for better control */
+    height: auto; /* Maintain aspect ratio */
+    user-select: none;
+}
+
+/* Anchor tag styles */
+a {
+    position: relative;
+    font-size: 1.2em; /* Adjust font size */
+    color: #28282B;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 20px; /* Adjust margin for better spacing */
+}
+
+/* Hover effect for anchor tags */
+a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 100%;
+    height: 3px;
+    background: #28282B;
+    border-radius: 5px;
+    transform-origin: right;
+    transform: scaleX(0);
+    transition: transform .3s; /* Slightly faster transition */
+}
+
+a:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* Icon styles */
+ion-icon {
+    font-size: 40px; /* Adjust icon size */
+}
+
+/* Navigation styles */
+.navigation {
+    display: flex;
+    align-items: center;
+}
+
+.navigation a {
+    position: relative;
+    font-size: 1.1em;
+    color: #28282B;
+    text-decoration: none;
+    font-weight: 500;
+    margin-right: 15px; /* Adjust spacing */
+}
+
+/* Hover effect for navigation links */
+.navigation a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 100%;
+    height: 3px;
+    background: #28282B;
+    border-radius: 5px;
+    transform-origin: right;
+    transform: scaleX(0);
+    transition: transform .3s; /* Slightly faster transition */
+}
+
+.navigation a:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .logo {
+        width: 40px; /* Smaller logo for smaller screens */
+    }
+
+    a {
+        font-size: 1em; /* Adjust font size for smaller screens */
+        margin-left: 10px; /* Adjust margin for better spacing */
+    }
+
+    .navigation a {
+        font-size: 1em; /* Adjust font size */
+        margin-right: 10px; /* Adjust margin */
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    .logo {
+        width: 30px; /* Smaller logo for very small screens */
+    }
+
+    .navigation {
+        margin-top: 10px;
+        flex-wrap: wrap; /* Allow navigation links to wrap */
+    }
+
+    .navigation a {
+        font-size: 0.9em; /* Smaller font size */
+        margin-right: 8px; /* Adjust margin */
+    }
+}
