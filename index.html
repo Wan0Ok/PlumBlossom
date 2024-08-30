@@ -8,23 +8,29 @@
 </head>
 <body>
     <header>
-        <img class="logo" src="plumblossomlogo.png" alt="PlumBlossomLogo">
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"><img class="logo" src="plumblossomlogo.png" alt="PlumBlossomLogo"></a>
         <a href="#">iwtoms</a>
         <nav class="navigation">
             <a href="https://www.instagram.com/tao_iwtoms/" target="_blank"><ion-icon name="logo-instagram"></ion-icon></a>
             <a href="wechatQRPHOTO.html" target="_blank"><ion-icon name="logo-wechat"></ion-icon></a>
-            <a href="#" target="_blank"><ion-icon name="id-card-outline"></ion-icon></a>
-            <a href="#" target="_blank"><ion-icon name="logo-discord"></ion-icon></a>
+            <a href="https://discord.gg/B5MwyRBnm2" target="_blank"><ion-icon name="logo-discord"></ion-icon></a>
+            <button id="info-button"><ion-icon name="id-card-outline"></ion-icon></button>
         </nav>
-        
     </header>
 
+    <!-- Modal structure -->
+    <div id="info-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <p>Name: Tao</p>
+            <p>Surname: Liu</p>
+            <p>Phone Number: <span id="phone-number" class="clickable">Private</span></p>
+            <p>Age: 18</p>
+        </div>
+    </div>
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="script.js"></script>
 </body>
-
-
-
-
 </html>
