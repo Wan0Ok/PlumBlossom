@@ -31,8 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 //Album changer Javascript
 const images = [
-    'catpfp.png',
-    'teddybearwithsign.jpg'
+    'cardfront.png',
+    'teddybearwithsign.jpg',
+    'catpfp.png'
     
 ];
 
