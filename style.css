@@ -157,7 +157,7 @@ ion-icon {
 /* Modal content */
 .modal-content {
     background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
-    margin: 30% auto; /* Center horizontally and move lower vertically */
+    margin: 20% auto; /* Center horizontally and move lower vertically */
     padding: 20px;
     border: 1px solid #888;
     width: 80%; /* Width of modal */
@@ -190,3 +190,11 @@ ion-icon {
     text-decoration: underline;
 }
 
+.btn{
+    cursor: pointer;
+    border: 1px solid white;
+    background-color: transparent;
+    margin-right: 20px;
+    margin-left: 15px;
+    color: #1B1212;
+}
