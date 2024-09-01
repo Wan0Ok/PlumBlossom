@@ -28,3 +28,33 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+//Album changer Javascript
+const images = [
+    'catpfp.png',
+    'teddybearwithsign.jpg'
+    
+];
+
+let currentIndex = 0;
+
+const photoElement = document.getElementById('photo');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+
+function updatePhoto() {
+    photoElement.src = images[currentIndex];
+}
+
+prevBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex === 0) ? images.length - 1 : currentIndex - 1;
+    updatePhoto();
+});
+
+nextBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex === images.length - 1) ? 0 : currentIndex + 1;
+    updatePhoto();
+});
+
+updatePhoto();  // Initial image load
+
