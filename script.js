@@ -59,3 +59,5 @@ nextBtn.addEventListener('click', () => {
 
 updatePhoto();  // Initial image load
 
+
+
