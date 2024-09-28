@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Interactive School Timetable</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+            overflow: hidden;
+        }
+        #timetable-container {
+            flex: 1;
+            overflow-x: auto;
+            overflow-y: auto;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            min-width: 120px;
+        }
+        th {
+            background-color: #f2f2f2;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        td:first-child {
+            position: sticky;
+            left: 0;
+            background-color: #f2f2f2;
+            z-index: 5;
+        }
+        .subject, .classroom {
+            padding: 5px;
+            margin: 5px;
+            cursor: move;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .timeslot {
+            height: 60px;
+            vertical-align: middle;
+        }
+        .interval {
+            height: 20px;
+            background-color: #f0f0f0;
+        }
+        .timeslot.dragover {
+            background-color: #e0e0e0;
+        }
+        .timeslot-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            font-size: 0.9em;
+        }
+        .timeslot-subject {
+            font-weight: bold;
+        }
+        .timeslot-classroom {
+            font-size: 0.8em;
+            color: #555;
+        }
+        #draggables {
+            width: 250px;
+            overflow-y: auto;
+        }
+        .draggable-section {
+            margin-bottom: 20px;
+        }
+        .informatica { background-color: orange; }
+        .lingua-inglese { background-color: blue; color: white; }
+        .gestione-progetto { background-color: lightgreen; }
+        .lettere { background-color: magenta; }
+        .tp-informatici { background-color: lime; }
+        .matematica { background-color: purple; color: white; }
+        .sistemi-reti { background-color: lavender; }
+        .scienze-motorie { background-color: aqua; }
+        .educazione-civica { background-color: brown; }
+        .classroom { background-color: #ffeb3b; }
+        details {
+            margin-bottom: 10px;
+        }
+        details[open] summary::after {
+            content: "▲";
+            float: right;
+        }
+        summary::after {
+            content: "▼";
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <h1>Enhanced Interactive School Timetable</h1>
+    <div class="container">
+        <div id="timetable-container">
+            <table id="timetable"></table>
+        </div>
+        <div id="draggables">
+            <div class="draggable-section">
+                <h2>Subjects</h2>
+                <div id="subjects"></div>
+            </div>
+            <div class="draggable-section">
+                <h2>Classrooms</h2>
+                <details open>
+                    <summary>100s</summary>
+                    <div id="100s"></div>
+                </details>
+                <details>
+                    <summary>200s</summary>
+                    <div id="200s"></div>
+                </details>
+                <details>
+                    <summary>300s</summary>
+                    <div id="300s"></div>
+                </details>
+                <details>
+                    <summary>Other Classrooms</summary>
+                    <div id="other-rooms"></div>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const subjects = [
+            { id: 'informatica', name: 'Informatica', color: 'informatica' },
+            { id: 'lingua-inglese', name: 'Lingua Inglese', color: 'lingua-inglese' },
+            { id: 'gestione-progetto', name: 'Gestione Progetto', color: 'gestione-progetto' },
+            { id: 'lettere', name: 'Lettere', color: 'lettere' },
+            { id: 'tp-informatici', name: 'TP informatici', color: 'tp-informatici' },
+            { id: 'matematica', name: 'Matematica', color: 'matematica' },
+            { id: 'sistemi-reti', name: 'Sistemi e reti', color: 'sistemi-reti' },
+            { id: 'scienze-motorie', name: 'Scienze motorie', color: 'scienze-motorie' },
+            { id: 'educazione-civica', name: 'Educazione civica', color: 'educazione-civica' },
+        ];
+
+        const classrooms = {
+            '100s': ['101', '102', '103', '104', '105', '106', '107', '108', '109', '110', '111', '112', '113', '114', '115'],
+            '200s': ['201', '202', '203', '204', '205', '206', '207', '208', '209', '210'],
+            '300s': ['301', '302', '303', '304'],
+            'other': ['Geo', 'Info1', 'Info2', 'Info3', 'Info4', 'Info5', 'Comp', 'Palestra Principale', 'Palestra Ungaretti']
+        };
+
+        const days = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì'];
+        const times = [
+            '8:00-8:50', '8:50-9:40', 'Intervallo (10 min)',
+            '9:50-10:40', '10:40-11:30', 'Intervallo (7 min)',
+            '11:37-12:27', '12:27-13:17', 'Pranzo',
+            '14:12-15:06', '15:06-16:00'
+        ];
+
+        function createTimetable() {
+            const table = document.getElementById('timetable');
+            const headerRow = table.insertRow();
+            headerRow.insertCell();
+            days.forEach(day => {
+                const th = document.createElement('th');
+                th.textContent = day;
+                headerRow.appendChild(th);
+            });
+
+            times.forEach(time => {
+                const row = table.insertRow();
+                const timeCell = row.insertCell();
+                timeCell.textContent = time;
+                
+                if (time.includes('Intervallo') || time === 'Pranzo') {
+                    days.forEach(() => {
+                        const cell = row.insertCell();
+                        cell.classList.add('interval');
+                        cell.textContent = time.includes('Intervallo') ? 'Intervallo' : 'Pranzo';
+                    });
+                } else {
+                    days.forEach(() => {
+                        const cell = row.insertCell();
+                        cell.classList.add('timeslot');
+                        cell.setAttribute('droppable', 'true');
+                        const contentDiv = document.createElement('div');
+                        contentDiv.classList.add('timeslot-content');
+                        const subjectDiv = document.createElement('div');
+                        subjectDiv.classList.add('timeslot-subject');
+                        const classroomDiv = document.createElement('div');
+                        classroomDiv.classList.add('timeslot-classroom');
+                        contentDiv.appendChild(subjectDiv);
+                        contentDiv.appendChild(classroomDiv);
+                        cell.appendChild(contentDiv);
+                        setupDropZone(cell);
+                    });
+                }
+            });
+        }
+
+        function createDraggables(items, containerId, itemClass) {
+            const container = document.getElementById(containerId);
+            items.forEach(item => {
+                const element = document.createElement('div');
+                element.textContent = typeof item === 'object' ? item.name : item;
+                element.classList.add(itemClass, typeof item === 'object' ? item.color : 'classroom');
+                element.setAttribute('draggable', 'true');
+                element.id = typeof item === 'object' ? item.id : item;
+                setupDraggable(element);
+                container.appendChild(element);
+            });
+        }
+
+        function setupDraggable(element) {
+            element.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', element.id);
+                e.dataTransfer.setData('itemType', element.classList.contains('subject') ? 'subject' : 'classroom');
+            });
+        }
+
+        function setupDropZone(element) {
+            element.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                element.classList.add('dragover');
+            });
+
+            element.addEventListener('dragleave', () => {
+                element.classList.remove('dragover');
+            });
+
+            element.addEventListener('drop', (e) => {
+                e.preventDefault();
+                element.classList.remove('dragover');
+                const id = e.dataTransfer.getData('text');
+                const itemType = e.dataTransfer.getData('itemType');
+                
+                const contentDiv = element.querySelector('.timeslot-content');
+                const subjectDiv = contentDiv.querySelector('.timeslot-subject');
+                const classroomDiv = contentDiv.querySelector('.timeslot-classroom');
+
+                if (itemType === 'subject') {
+                    const subject = subjects.find(s => s.id === id);
+                    if (subject) {
+                        subjectDiv.textContent = subject.name;
+                        element.className = 'timeslot ' + subject.color;
+                    }
+                } else if (itemType === 'classroom') {
+                    classroomDiv.textContent = id;
+                }
+            });
+        }
+
+        createTimetable();
+        createDraggables(subjects, 'subjects', 'subject');
+        createDraggables(classrooms['100s'], '100s', 'classroom');
+        createDraggables(classrooms['200s'], '200s', 'classroom');
+        createDraggables(classrooms['300s'], '300s', 'classroom');
+        createDraggables(classrooms['other'], 'other-rooms', 'classroom');
+    </script>
+</body>
+</html>
